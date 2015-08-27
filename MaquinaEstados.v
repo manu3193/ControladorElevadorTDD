@@ -36,32 +36,6 @@ module MaquinaEstados(
 	 reg[1:0] floor3Register;
 	 reg[1:0] floor4Register;
 	 
-	 //--------------Todo para el 7 segementos-------------------
-	 
-	 reg A, B, C; //cambia depende de lo que pase en la maquina de estados
-	 reg o1,o2,o3,o4,o5,o6,o7; //Las salidas cambian depende de los 3 registros anteriores
-										//
-		
-	always @(o1,o2,o3,o4,o5,o6,o7)
-		begin 
-			o1 = !( (!C&!A) | B ); 
-			o2 = 1'b0;
-			o3 = !( (!B) | C );
-			o4 = !( (!A&!C) | B );
-			o5 = !( (!A&!C) | (B&!C) );
-			o6 = !( A | (!B&!C) );
-			o7 = !( A | B ); 
-			
-		end
-			
-	 //Siempre están en cero
-	 assign an1 = 1'b0;
-	 assign an2 = 1'b0;
-	 assign an3 = 1'b0;
-	 assign an4 = 1'b0;
-	 	 
-	 
-	 //----------------------------------------------------------
 	 
 	 //---------------AHORA LA MAQUINA DE ESTADOS-----------------
 	 
@@ -139,7 +113,77 @@ module MaquinaEstados(
 					nextState = esperaPasajeros;
 			
 		endcase
-	end
+	end	
+endmodule
+
+
+//modulo 7 segmentos
+module SieteSegmentos(
+		input wire [2:0] i, //cambia depende de lo que pase en la maquina de estados
+		output o1, o2, o3, o4, o5, o6, o7, //Las salidas cambian depende de los 3 registros anteriores
+		output an1, an2, an3, an4 //Anodos para activar 7 segmentos
+	);
+	reg o1;
+	reg o2;
+	reg o3;
+	reg o4;
+	reg o5;
+	reg o6;
+	reg o7;
+		
+	always @(o1,o2,o3,o4,o5,o6,o7)
+		begin 
+			o1 = !( (!i[2]&!i[0]) | i[1] ); //'C'A+B
+			o2 = 1'b0;// siempre 1
+			o3 = !( (!i[1]) | i[2] ); //'B+C
+			o4 = !( (!i[0]&!i[2]) | i[1] );//'A'C+B
+			o5 = !( (!i[0]&!i[2]) | (i[1]&!i[2]) );//'A'C+B'C
+			o6 = !( i[0] | (!i[1]&!i[2]) );//A+'B'C
+			o7 = !( i[0] | i[1] ); //A+B
+			
+		end
+			
+	 //Siempre están en cero
+	 assign an1 = 1'b0;
+	 assign an2 = 1'b0;
+	 assign an3 = 1'b0;
+	 assign an4 = 1'b0;
 	 
-	
+endmodule
+
+
+
+//Se define que el tiempo en que la puerta estará abierta como maximo es de 10seg
+
+//Modulo del temporizador
+module Temporizador_Divisor (
+		input wire C_100Mhz, //Clock de la fpga = 100MHz
+		input wire startTimer,
+		input wire restart,
+		output C_1Hz,
+		output timeExpired
+	);
+
+	reg timeExpired; //1 expirado, 0 no expirado
+	reg C_1Hz = 1;  //Señal de salida (<em>Se debe asignar un estado lógico</em>).
+	 
+	reg[24:0] contador = 0; //Variable Contador equivale a 25 millones de estados. 
+	 
+	always @(posedge C_100Mhz)
+		begin
+			if (startTimer)
+				begin
+				contador = contador + 1; //0.5 segundos LED encendido
+				if(contador == 25_000_000 | restart) //25000000 por vara
+					begin
+					contador = 0;
+					C_1Hz = ~C_1Hz; //0.5 segundos LED apagado
+					end
+				if (contador == 10)
+					begin
+					timeExpired = 1'b1;
+					contador = 0;
+					end
+				end
+	  end
 endmodule
