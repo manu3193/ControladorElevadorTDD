@@ -10,3 +10,11 @@
 //Solicitud de piso con los botones
 
 
+NET "subiendo_LED" LOC = T11;
+NET "bajando_LED" LOC = R11;
+NET "freno_act_LED" LOC = N11;
+NET "motor_act_LED" LOC = M11;
+NET "puerta_abierta_LED" LOC = V15;
+NET "puerta_cerrada_LED" LOC = U15;
+NET "sensor_puerta_LED" LOC = V16;
+NET "sensor_sobrepeso_LED" LOC = U16;

@@ -10,6 +10,7 @@ module MaquinaEstados(
 	accion, //00:reposo,01:llegado a destino,10:subir, 11:bajar
 	sensor_puerta, //Indicador de puerta atascada (1: atascado, 0 libre)
 	sensor_sobrepeso, //Indicador de sobrepeso (1: si hay, 0 no hay)
+	t_expired,
 	
 	restart_timer, //reinicia el timer 
 	start_timer, //inicia el timer
@@ -28,9 +29,9 @@ module MaquinaEstados(
 	
 	input wire clk, reset;
 	input wire [1:0] accion;
-	input sensor_puerta, sensor_sobrepeso;
+	input sensor_puerta, sensor_sobrepeso, t_expired;
 	
-	output wire restart_timer, start_timer;
+	output reg restart_timer, start_timer;
 	output reg subiendo_LED,
 			 bajando_LED,
 		    freno_act_LED,
@@ -67,10 +68,10 @@ module MaquinaEstados(
 		
 			reposo:
 				begin
-				assign freno_act_LED = 1'b1;
-				assign puerta_abierta_LED = 1'b0;
-				assign puerta_cerrada_LED = 1'b1;
-				assign motor_act_LED = 1'b0;
+				freno_act_LED = 1'b1;
+				puerta_abierta_LED = 1'b0;
+				puerta_cerrada_LED = 1'b1;
+				motor_act_LED = 1'b0;
 				if (accion[1:0] == 2'b00)
 					begin
 					nextState = reposo;
@@ -84,15 +85,24 @@ module MaquinaEstados(
 					nextState = abre_puerta;
 					end
 				end
+				
 			movimiento:
 				begin
-				assign freno_act_LED = 1'b0;
-				assign motor_act_LED = 1'b1;
-				
-				
+				freno_act_LED = 1'b0;
+				motor_act_LED = 1'b1;
 				
 				if (accion[1:0] == 2'b1x)
 					begin
+					if (accion[1:0] == 2'b10)
+						begin
+						subiendo_LED = 1'b1;
+						bajando_LED = 1'b0;
+						end 
+					if (accion[1:0] == 2'b11)
+						begin
+						subiendo_LED = 1'b0;
+						bajando_LED = 1'b1;
+						end 
 					nextState = movimiento;
 					end
 				else if (accion[1:0] == 2'b01)
@@ -100,37 +110,78 @@ module MaquinaEstados(
 					nextState = detener;
 					end
 				end
+				
 			detener:
 				begin
-				assign freno_act_LED = 1'b1;
-				
+				freno_act_LED = 1'b1;
+				motor_act_LED = 1'b0;
+				nextState = abre_puerta;
 				end
+				
 			abre_puerta:
 				begin
-				assign freno_act_LED = 1'b1;
+				puerta_abierta_LED = 1'b1;
+				puerta_cerrada_LED = 1'b0;
+				if (accion [1:0] == 2'b1x)
+					begin 
+					nextState = inicia_conteo;
+					end
+				else if (accion[1:0] == 2'b00)
+					begin 
+					nextState = reposo;
+					end
 				end
+				
 			inicia_conteo:
 				begin
-				assign freno_act_LED = 1'b1;
+				start_timer = 1'b1;
+				nextState = revisa_seguridad;
 				end
+				
 			revisa_seguridad:
 				begin
-				assign freno_act_LED = 1'b1;
+				if (!(sensor_puerta) & !(sensor_sobrepeso) & !(t_expired))
+					begin
+					nextState = revisa_seguridad;
+					end
+				else if (sensor_sobrepeso | sensor_puerta & !(t_expired))
+					begin
+					nextState = dispara_alerta;
+					end
+				else if (t_expired)
+					begin
+					nextState = cierra_puerta;
+					end
 				end
+				
 			dispara_alerta:
 				begin
-				assign freno_act_LED = 1'b1;
+				if (sensor_sobrepeso)
+					begin
+					sensor_sobrepeso_LED = 1'b1;
+					end
+				if (sensor_puerta)
+					begin
+					sensor_puerta_LED = 1'b1;
+					end 
+				nextState = reinicia_conteo;
 				end
+				
 			reinicia_conteo:
 				begin
-				assign freno_act_LED = 1'b1;
+				restart_timer = 1'b1;
+				nextState = revisa_seguridad;
 				end
+				
 			cierra_puerta:
 				begin
-				assign freno_act_LED = 1'b1;
+				puerta_abierta_LED = 1'b0;
+				puerta_cerrada_LED = 1'b1;
+				nextState = movimiento;
 				end
 			
 			default: nextState = reposo;
+			
 		endcase
 	end
 endmodule
