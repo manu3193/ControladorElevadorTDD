@@ -1,11 +1,11 @@
 //Switches para indicar sobre peso y puerta atascada
-NET "overweight" LOC = T5;
-NET "jammedDoor" LOC = V8;
+//NET "overweight" LOC = T5;
+//NET "jammedDoor" LOC = V8;
 
 //LEDS para indicar motor funcionando, frenos funcionando y abriendo puerta
-NET "motor" LOC = T11;
-NET "brake" LOC = R11;
-NET "openDoor" LOC = N11;
+//NET "motor" LOC = T11;
+//NET "brake" LOC = R11;
+//NET "openDoor" LOC = N11;
 
 //Solicitud de piso con los botones
 

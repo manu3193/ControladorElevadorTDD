@@ -29,7 +29,11 @@
 	 */
 	 
 module VerificadorSentidoMovimiento(
-    );
+		);
+	 
+	 
+	 
+	 
 
 
 endmodule

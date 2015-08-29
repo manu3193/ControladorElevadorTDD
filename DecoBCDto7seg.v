@@ -26,52 +26,37 @@
 	 *
 	 *
 	 */
+
+//modulo 7 segmentos
 module DecoBCDto7seg(
-	
-    input A,
-    input B,
-    input C,
-    input D,
-	 
-    output o1,
-    output o2,
-    output o3,
-    output o4,
-    output o5,
-    output o6,
-    output o7,
-	 
-	 output an1,
-	 output an2,
-	 output an3,
-	 output an4
-    );
-	 
-	 
+		input wire [2:0] i, //cambia depende de lo que pase en la maquina de estados
+		output o1, o2, o3, o4, o5, o6, o7, //Las salidas cambian depende de los 3 registros anteriores
+		output an1, an2, an3, an4 //Anodos para activar 7 segmentos
+	);
+	reg o1;
+	reg o2;
+	reg o3;
+	reg o4;
+	reg o5;
+	reg o6;
+	reg o7;
 		
-		reg o1;
-		reg o2;
-		reg o3;
-		reg o4;
-		reg o5;
-		reg o6;
-		reg o7;
-		
-		always @(o1,o2,o3,o4,o5,o6,o7)
-			begin 
-				o1 = !((!C&!A)| (C&A) | B | D); 
-				o2 = !(!C | D| (A&B) | (!A&!B));
-				o3 = ! ( (!A&!B) | A | D | C);
-				o4 = !((!A&!C) | (B&!C) | D | (!A&B) | (A&!B&C));
-				o5 = !( (!A&!C) | (!A&D) | (B&D) | (C&D) | (!A&B));
-				o6 = ! ((!A&!B) | D | (!A&C) | (!B&C));
-				o7 = !(D | (B&!C) | (!A&C) | (!B&C)); 
-				
-			end
-	 
+	always @(o1,o2,o3,o4,o5,o6,o7)
+		begin 
+			o1 = !( (!i[2]&!i[0]) | i[1] ); //'C'A+B
+			o2 = 1'b0;// siempre 1
+			o3 = !( (!i[1]) | i[2] ); //'B+C
+			o4 = !( (!i[0]&!i[2]) | i[1] );//'A'C+B
+			o5 = !( (!i[0]&!i[2]) | (i[1]&!i[2]) );//'A'C+B'C
+			o6 = !( i[0] | (!i[1]&!i[2]) );//A+'B'C
+			o7 = !( i[0] | i[1] ); //A+B
+			
+		end
+			
+	 //Siempre están en cero
 	 assign an1 = 1'b0;
 	 assign an2 = 1'b0;
 	 assign an3 = 1'b0;
 	 assign an4 = 1'b0;
-
+	 
 endmodule
