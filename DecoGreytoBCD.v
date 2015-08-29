@@ -23,20 +23,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 //Decodificador que convierte código grey de 3 bits en código binario
 module DecoGreytoBCD(
-	A_in,B_in,C_in,	//3 bits de entrada
-	A_out, B_out, C_out //3 bits de salida
+	entradas_i,	//3 bits de entrada
+	salidas_o //3 bits de salida
 	);
 	
-	input A_in, B_in, C_in;
-	output A_out, B_out, C_out;
+	input [2:0] entradas_i;
+	output [2:0] salidas_o;
 	
-	wire A_in, B_in, C_in;
-	wire A_out, B_out, C_out;
+	//wire entradas_i;
+	//wire salidas_o;
 	
 	//Aqui se hace la transformación
-	assign A_out = A_in;
-	xor xorB(B_out, A_in, B_in);
-	xor xorC(C_out, B_out, C_in);
+	assign salidas_o[0] = entradas_i[0];
+	xor xorB(salidas_o[1], entradas_i[0], entradas_i[1]);
+	xor xorC(salidas_o[2], salidas_o[1], entradas_i[2]);
 	
 	
 endmodule
