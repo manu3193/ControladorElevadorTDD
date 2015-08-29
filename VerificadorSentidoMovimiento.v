@@ -25,7 +25,7 @@
 	 *lógica combinacional entre el valor del registro de solicitudes y el piso actual.
 	 *Tiene como entradas los 10 bits del registro de solicitudes y los 3 bits del código
 	 *Grey identificador de cada piso y el clock. Tiene como salidas 2 bits que idicarán la
-	 *habilitación del motor (MSB) 0=apagado, 1=activado y la dirección(LSB) 0=bajar, 1=subir . 
+	 *habilitación del motor (MSB) 0=apagado, 1=activado y la dirección(LSB) 0=subir, 1=bajar . 
 	 */
 	 
 module VerificadorSentidoMovimiento(
