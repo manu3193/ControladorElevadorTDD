@@ -18,13 +18,8 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module Ascensor(
-	clk,
-	reset
-	);
-	
-	input clk, reset;
-	
+/*
+module Ascensor;
 	wire [1:0] conector_1;
 	wire conector_2;
 	wire conector_3;
@@ -49,4 +44,4 @@ module Ascensor(
 		.start_timer (conector_9)		
 	);
 
-endmodule
+endmodule*/
