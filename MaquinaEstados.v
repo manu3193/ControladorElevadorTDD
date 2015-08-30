@@ -15,7 +15,7 @@ module MaquinaEstados(
 	restart_timer, //reinicia el timer 
 	start_timer, //inicia el timer
 	
-	//A continuación los leds que se estrán activando y desactivando
+	//A continuacin los leds que se estrn activando y desactivando
 	subiendo_LED,
 	bajando_LED,
 	freno_act_LED,
@@ -54,7 +54,7 @@ module MaquinaEstados(
 	 parameter reinicia_conteo = 7;
 	 parameter cierra_puerta = 8;
 	 
-	 //Asignación sincrona del siguiente estado
+	 //Asignacin sincrona del siguiente estado
 	 always @(posedge clk or negedge reset)
 		if (!reset)
 			state <= reposo;
@@ -188,32 +188,7 @@ endmodule
 
 
 
-module Ascensor;
-	wire [1:0] conector_1;
-	wire conector_2;
-	wire conector_3;
-	wire conector_4;
-	wire conector_5;
-	wire conector_6;
-	wire conector_7;
-	wire conector_8;
-	wire conector_9;
-	wire conector_10;
-	wire conector_11;
-	
-	MaquinaEstados maquina_estados(
-		.accion (conector_1),
-		.sensor_puerta (conector_2),
-		.sensor_sobrepeso (conector_3),
-		.clk (conector_4),
-		.reset (conector_5),
-		.state (conector_6),
-		.t_expired (conector_7),
-		.restart_timer (conector_8),
-		.start_timer (conector_9)		
-	);
 
-endmodule
 
 
 
