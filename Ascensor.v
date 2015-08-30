@@ -18,8 +18,9 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+
+module Ascensor( _clk_, start_timer, restart, t_expired);
 /*
-module Ascensor;
 	wire [1:0] conector_1;
 	wire conector_2;
 	wire conector_3;
@@ -32,6 +33,7 @@ module Ascensor;
 	wire conector_10;
 	wire conector_11;
 	
+	
 	MaquinaEstados maquina_estados(
 		.accion (conector_1),
 		.sensor_puerta (conector_2),
@@ -42,6 +44,20 @@ module Ascensor;
 		.t_expired (conector_7),
 		.restart_timer (conector_8),
 		.start_timer (conector_9)		
-	);
-
-endmodule*/
+	);*/
+	
+	input _clk_, start_timer, restart;
+	output wire t_expired;
+	wire a;
+	
+	
+	Divisor_Frecuencia div(
+		.C_100Mhz(_clk_),
+		.C_1Hz(a));
+		
+	Temporizador temp(
+		._clk_(a),
+		.start_i(start_timer),
+		.restart_i(restart),
+		.t_expired_o(t_expired));
+endmodule
