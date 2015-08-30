@@ -29,22 +29,22 @@
 	 */
 module RegistroSolicitudes(
    input clk, 
-	input ShiftIn,
-	input [9:0] ParallelIn, 
-	input load, 
-	input ShiftEn, 
-	output ShiftOut, 
-	output[9:0] RegContent
+	input shift_in,
+	input [9:0] entrada, 
+	input carga, 
+	input shift_en, 
+	output shift_out, 
+	output[9:0] contenido
 	);
 	
 	reg [9:0] shift_reg;
 	
 	always @(posedge clk)
-		if(load)
-			shift_reg <= ParallelIn;
-		else if (ShiftEn)
-			shift_reg <= {shift_reg[8:0], ShiftIn};
-		assign ShiftOut = shift_reg[9];
-		assign RegContent = shift_reg;
+		if(carga)
+			shift_reg <= entrada;
+		else if (shift_en)
+			shift_reg <= {shift_reg[8:0], shift_in};
+		assign shift_out = shift_reg[9];
+		assign contenido = shift_reg;
 		
 endmodule
