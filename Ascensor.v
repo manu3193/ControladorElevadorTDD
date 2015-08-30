@@ -18,7 +18,13 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module Ascensor;
+module Ascensor(
+	clk,
+	reset
+	);
+	
+	input clk, reset;
+	
 	wire [1:0] conector_1;
 	wire conector_2;
 	wire conector_3;
