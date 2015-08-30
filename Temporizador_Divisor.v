@@ -2,9 +2,9 @@
 
 //Modulo del temporizador
 module Temporizador_Divisor (
-		input wire C_100Mhz, //Clock de la fpga = 100MHz
-		input wire startTimer,
-		input wire restart,
+		input C_100Mhz, //Clock de la fpga = 100MHz
+		input startTimer,
+		input restart,
 		output C_1Hz,
 		output timeExpired
 	);
