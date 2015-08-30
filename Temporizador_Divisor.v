@@ -20,7 +20,7 @@ module Temporizador_Divisor (
 		begin
 			if (startTimer)
 				begin
-				if(contador == restart) //reinicia
+				if(restart) //reinicia
 					begin
 					contador <= 0;
 					C_1Hz <= 1'b0;
