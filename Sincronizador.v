@@ -132,7 +132,7 @@ module Sincronizador( _clk_, piso_actual_i, sensor_sobrePeso_i, sensor_puerta_i,
  	always @(posedge _clk_)
 	begin 
 		if (contador == contador_max)
-			contador <= 1'b0;	//takes 40mS to reach 4,000,000
+			contador <= 1'b0;	
 		else
 			contador <= contador + 1'b1;
 	end
