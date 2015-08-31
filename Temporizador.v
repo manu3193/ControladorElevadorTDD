@@ -21,25 +21,27 @@
 module Temporizador( _clk_, start_i, restart_i, t_expired_o);
 
 	input _clk_, start_i, restart_i;
-	output reg t_expired_o;
+	output  t_expired_o;
 
 
-	reg[10:0] contador = 4'b0; //registro que almacena Contador
+	reg[3:0] contador = 4'b0; //registro que almacena Contador
+	localparam contador_max=7; //Se cuentan 7 segundos
+	reg t_expired_o=0;
 	
 	
 	always @(posedge _clk_) begin
-		if (start_i) begin
-			if(restart_i) begin
-				t_expired_o<= 1'b0;
-				contador <=0;
-			end				
-			if(contador==7) begin
-				t_expired_o<=1'b1;
-				contador <=0;
-			end
-			else begin
-				t_expired_o<= 1'b0;
-				contador <= contador+1;
+		t_expired_o<=0;
+		if(restart_i) 
+			contador <=0;	
+		else begin
+			if (start_i) begin		
+				if(contador==contador_max-1) begin
+					t_expired_o<=1'b1;
+					contador <=0;
+				end
+				else begin
+					contador <= contador+1;
+				end
 			end
 		end
 	end

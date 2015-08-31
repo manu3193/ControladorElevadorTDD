@@ -46,7 +46,7 @@ module Ascensor( _clk_, start_timer, restart, t_expired);
 		.start_timer (conector_9)		
 	);*/
 	
-	input _clk_, start_timer, restart;
+	input wire _clk_, start_timer, restart;
 	output wire t_expired;
 	wire a;
 	

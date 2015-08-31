@@ -129,12 +129,12 @@ module Sincronizador( _clk_, piso_actual_i, sensor_sobrePeso_i, sensor_puerta_i,
  reg [3:0] sr_solicitud_p2_1=4'b0, sr_solicitud_p3_0=4'b0, sr_solicitud_p3_1=4'b0, sr_solicitud_p4_0= 4'b0, sr_solicitud_p4_1=4'b0;
  
  //Contador
- 	always @(posedge clk)
+ 	always @(posedge _clk_)
 	begin 
 		if (contador == contador_max)
 			contador <= 1'b0;	//takes 40mS to reach 4,000,000
 		else
-			contador <= db_count + 1'b1;
+			contador <= contador + 1'b1;
 	end
 	
 	
