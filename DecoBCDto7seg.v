@@ -1,4 +1,4 @@
-timescale 1ns / 1ps
+`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -53,7 +53,7 @@ module DecoBCDto7seg(
 			
 		end
 			
-	 //Siempre están en cero
+	 //Siempre estn en cero
 	 assign an1 = 1'b0;
 	 assign an2 = 1'b0;
 	 assign an3 = 1'b0;
