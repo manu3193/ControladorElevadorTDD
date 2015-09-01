@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 
 ////////////////////////////////////////////////////////////////// 
 ////                                                              ////
@@ -72,7 +72,7 @@ module Sincronizador( _clk_, piso_actual_i, sensor_sobrePeso_i, sensor_puerta_i,
  output reg [1:0] solicitud_ps_o, solicitud_p1_o, solicitud_p2_o, solicitud_p3_o, solicitud_p4_o;
  
  //El contador cuenta hasta 10ms, por lo que se almacena 1000000.
- localparam contador_max= 19'd1000000;
+ localparam contador_max= 20'd1000000;
  
  //Se crea el primer registro (flip-flop) por cada entrada para sincronizarlos con el clk
  reg sensor_sobrePeso_sync_0;
@@ -121,7 +121,7 @@ module Sincronizador( _clk_, piso_actual_i, sensor_sobrePeso_i, sensor_puerta_i,
 	end
  
  //Se crea el registro que almacena el contador
- reg [19:0] contador;
+ reg [19:0] contador=0;
  
  //Se crean los shift registers que almacenan las 4 muestras de los estados de los botones y switches correspondientes
  reg [3:0] sr_sobrePeso= 4'b0, sr_puerta= 4'b0, sr_piso_actual_0= 4'b0, sr_piso_actual_1= 4'b0, sr_piso_actual_2= 4'b0;

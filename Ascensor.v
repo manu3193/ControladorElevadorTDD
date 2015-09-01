@@ -19,7 +19,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module Ascensor( _clk_, start_timer, restart, t_expired);
+module Ascensor( _clk_,_reset_i,solicitud_ps,solicitud_p1,solicitud_p2,solicitud_p3,solicitud_p4,
+piso_actual,sobrepeso,puerta,solicitud_ps_out,solicitud_p1_out,solicitud_p2_out,solicitud_p3_out,
+solicitud_p4_out,piso_actual_o,sobrepeso_o,puerta_o,clear_ps,clear_p1,clear_p2,clear_p3,clear_p4);
 /*
 	wire [1:0] conector_1;
 	wire conector_2;
@@ -46,18 +48,74 @@ module Ascensor( _clk_, start_timer, restart, t_expired);
 		.start_timer (conector_9)		
 	);*/
 	
-	input wire _clk_, start_timer, restart;
-	output wire t_expired;
-	wire a;
+	input _clk_;
+	input _reset_i;
+	input [1:0] solicitud_ps;
+	input [1:0] solicitud_p1;
+	input [1:0] solicitud_p2;
+	input [1:0] solicitud_p3;
+	input [1:0] solicitud_p4;
+	input [2:0] piso_actual;
+	input sobrepeso;
+	input puerta;
+	input clear_ps;
+	input clear_p1;
+	input clear_p2;
+	input clear_p3;
+	input clear_p4;
+
 	
 	
-	Divisor_Frecuencia div(
-		.C_100Mhz(_clk_),
-		.C_1Hz(a));
-		
-	Temporizador temp(
-		._clk_(a),
-		.start_i(start_timer),
-		.restart_i(restart),
-		.t_expired_o(t_expired));
+
+	// Outputs
+	output [1:0] solicitud_ps_out;
+	output [1:0] solicitud_p1_out;
+	output [1:0] solicitud_p2_out;
+	output [1:0] solicitud_p3_out;
+	output [1:0] solicitud_p4_out;
+	output [2:0] piso_actual_o;
+	output sobrepeso_o;
+	output puerta_o;
+	
+	wire[1:0] piso_s, piso_1, piso_2,piso_3, piso_4;
+	
+	Sincronizador sinc(
+	._clk_(_clk_), 
+	.piso_actual_i(piso_actual),
+	.sensor_sobrePeso_i(sobrepeso), 
+	.sensor_puerta_i(puerta), 
+	.solicitud_ps_i(solicitud_ps), 
+	.solicitud_p1_i(solicitud_p1),
+	.solicitud_p2_i(solicitud_p2), 
+	.solicitud_p3_i(solicitud_p3), 
+	.solicitud_p4_i(solicitud_p4), 
+	.piso_actual_o(piso_actual_o), 
+	.sensor_sobrePeso_o(sobrepeso_o), 
+	.sensor_puerta_o(puerta_o), 
+	.solicitud_ps_o(piso_s), 
+	.solicitud_p1_o(piso_1), 
+	.solicitud_p2_o(piso_2), 
+	.solicitud_p3_o(piso_3),
+	.solicitud_p4_o(piso_4)
+	);
+	
+	RegistroSolicitudes regsol(
+	._clk_(_clk_),
+	.reset_in(_reset_i),
+	.solicitud_ps_clear_in(clear_ps), 
+	.solicitud_p1_clear_in(clear_p1), 
+	.solicitud_p2_clear_in(clear_p2), 
+	.solicitud_p3_clear_in(clear_p3), 
+	.solicitud_p4_clear_in(clear_p4),
+   .solicitud_ps_in(~piso_s), 
+	.solicitud_p1_in(~piso_1), 
+	.solicitud_p2_in(~piso_2), 
+	.solicitud_p3_in(~piso_3), 
+	.solicitud_p4_in(~piso_4),
+	.solicitud_ps_out(solicitud_ps_out), 
+	.solicitud_p1_out(solicitud_p1_out), 
+	.solicitud_p2_out(solicitud_p2_out), 
+	.solicitud_p3_out(solicitud_p3_out), 
+	.solicitud_p4_out(solicitud_p4_out));
+	
 endmodule

@@ -30,7 +30,7 @@ module Registro2Bits(_clk_, datos_i, clear_i, salida_o
 		if(clear_i) 
 			salida_o<=2'b00;
 		else 
-			salida_o<= salida_o | datos_i;
+			salida_o<= datos_i | salida_o;
 	end
 	
 

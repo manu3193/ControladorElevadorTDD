@@ -88,8 +88,8 @@ module RegistroSolicitudes(
 	.clear_i(clear_p4),
 	.salida_o(solicitud_p4_out));
 	
-	always @( posedge _clk_ or negedge reset_in) begin
-		if(!reset_in) begin
+	always @( posedge _clk_ or posedge reset_in) begin
+		if(reset_in) begin
 			clear_ps<=1;
 			clear_p1<=1;
 			clear_p2<=1;
