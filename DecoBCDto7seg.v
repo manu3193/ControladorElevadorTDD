@@ -29,19 +29,15 @@
 
 //modulo 7 segmentos
 module DecoBCDto7seg(
-		input wire [2:0] i, //cambia depende de lo que pase en la maquina de estados
-		output o1, o2, o3, o4, o5, o6, o7, //Las salidas cambian depende de los 3 registros anteriores
-		output an1, an2, an3, an4 //Anodos para activar 7 segmentos
+		i, //cambia depende de lo que pase en la maquina de estados
+		o1, o2, o3, o4, o5, o6, o7, //Las salidas cambian depende de los 3 registros anteriores
+		an1, an2, an3, an4 //Anodos para activar 7 segmentos
 	);
-	reg o1;
-	reg o2;
-	reg o3;
-	reg o4;
-	reg o5;
-	reg o6;
-	reg o7;
-		
-	always @(o1,o2,o3,o4,o5,o6,o7)
+	input [2:0] i;
+	output reg o1, o2, o3, o4, o5, o6, o7;
+	output an1, an2, an3, an4;
+	
+	always @(o1, o2, o3, o4, o5, o6, o7,i)
 		begin 
 			o1 = !( (!i[0]&!i[2]) | i[1] ); //'C'A+B
 			o2 = 1'b0;// siempre 1
