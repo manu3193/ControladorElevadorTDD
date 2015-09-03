@@ -56,34 +56,39 @@ module RegistroSolicitudes(
 	output [1:0] solicitud_ps_out, solicitud_p1_out, solicitud_p2_out, solicitud_p3_out, solicitud_p4_out
 	);
 	
-	reg clear_ps, clear_p1, clear_p2, clear_p3, clear_p4;
+	reg clear_ps, clear_p1, clear_p2, clear_p3, clear_p4=1;
 	
 	Registro2Bits piso_s (
 	._clk_(_clk_),
 	.datos_i(solicitud_ps_in),
+	//.load_en(solicitud_ps_in[0]|solicitud_ps_in[1]),
 	.clear_i(clear_ps),
 	.salida_o(solicitud_ps_out));
 	
 	Registro2Bits piso_1 (
 	._clk_(_clk_),
 	.datos_i(solicitud_p1_in),
+	//.load_en(solicitud_p1_in[0]|solicitud_p1_in[1]),
 	.clear_i(clear_p1),
 	.salida_o(solicitud_p1_out));
 	
 	Registro2Bits piso_2 (
 	._clk_(_clk_),
+	//.load_en(solicitud_p2_in[0]|solicitud_p2_in[1]),
 	.datos_i(solicitud_p2_in),
 	.clear_i(clear_p2),
 	.salida_o(solicitud_p2_out));
 	
 	Registro2Bits piso_3 (
 	._clk_(_clk_),
+	//.load_en(solicitud_p3_in[0]|solicitud_p3_in[1]),
 	.datos_i(solicitud_p3_in),
 	.clear_i(clear_p3),
 	.salida_o(solicitud_p3_out));
 	
 	Registro2Bits piso_4 (
 	._clk_(_clk_),
+	//.load_en(solicitud_p4_in[0]|solicitud_p4_in[1]),
 	.datos_i(solicitud_p4_in),
 	.clear_i(clear_p4),
 	.salida_o(solicitud_p4_out));

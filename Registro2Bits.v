@@ -18,10 +18,10 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module Registro2Bits(_clk_, datos_i, clear_i, salida_o
+module Registro2Bits(_clk_, datos_i/*, load_en*/, clear_i, salida_o
     );
 	
-	input _clk_, clear_i;
+	input _clk_, clear_i/*, load_en*/;
 	input [1:0] datos_i;
 	output reg [1:0] salida_o;
 	
@@ -29,8 +29,8 @@ module Registro2Bits(_clk_, datos_i, clear_i, salida_o
 		
 		if(clear_i) 
 			salida_o<=2'b00;
-		else 
-			salida_o<= datos_i | salida_o;
+		else //if(load_en)
+			salida_o<= datos_i|salida_o;
 	end
 	
 

@@ -19,10 +19,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module Ascensor( _clk_,_reset_i,solicitud_ps,solicitud_p1,solicitud_p2,solicitud_p3,solicitud_p4,
+module Ascensor( /*_clk_,_reset_i,solicitud_ps,solicitud_p1,solicitud_p2,solicitud_p3,solicitud_p4,
 piso_actual,sobrepeso,puerta,solicitud_ps_out,solicitud_p1_out,solicitud_p2_out,solicitud_p3_out,
 solicitud_p4_out,piso_actual_o,sobrepeso_o,puerta_o,clear_ps,clear_p1,clear_p2,clear_p3,clear_p4);
-/*
+
 	wire [1:0] conector_1;
 	wire conector_2;
 	wire conector_3;
@@ -47,7 +47,7 @@ solicitud_p4_out,piso_actual_o,sobrepeso_o,puerta_o,clear_ps,clear_p1,clear_p2,c
 		.restart_timer (conector_8),
 		.start_timer (conector_9)		
 	);*/
-	
+	/*
 	input _clk_;
 	input _reset_i;
 	input [1:0] solicitud_ps;
@@ -116,6 +116,58 @@ solicitud_p4_out,piso_actual_o,sobrepeso_o,puerta_o,clear_ps,clear_p1,clear_p2,c
 	.solicitud_p1_out(solicitud_p1_out), 
 	.solicitud_p2_out(solicitud_p2_out), 
 	.solicitud_p3_out(solicitud_p3_out), 
-	.solicitud_p4_out(solicitud_p4_out));
+	.solicitud_p4_out(solicitud_p4_out));*/
+	
+	//_clk_, start_timer, restart, t_expired,a
+	entrada_gray, 
+	o1, o2, o3, o4, o5, o6, o7,
+	an1, an2, an3, an4
+	);
+	
+	
+	/*input _clk_, start_timer, restart;
+	output wire t_expired;
+	output wire a;*/
+	
+	output o1, o2, o3, o4, o5, o6, o7;
+	output an1, an2, an3, an4;
+	
+	input [2:0] entrada_gray;
+	wire [2:0] salida_gray;
+	
+	
+	DecoGreytoBCD deco_gray (
+		.entradas_i (entrada_gray),	
+		.salidas_o (salida_gray)
+	);
+	
+	DecoBCDto7seg (
+		.i(salida_gray),
+		.o1(o1),
+		.o2(o2),
+		.o3(o3),
+		.o4(o4),
+		.o5(o5),
+		.o6(o6),
+		.o7(o7),
+		.an1(an1),
+		.an2(an2),
+		.an3(an3),
+		.an4(an4)
+	);
+	
+	/*Divisor_Frecuencia div(
+		.C_100Mhz(_clk_),
+		.C_1Hz(a));
+		
+	Temporizador temp(
+		._clk_(a),
+		.start_i(start_timer),
+		.restart_i(restart),
+		.t_expired_o(t_expired));*/
+		
+	
+		
+	
 	
 endmodule
