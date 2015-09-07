@@ -29,20 +29,28 @@
 	 */
 	 
 module VerificadorSentidoMovimiento(
+		_clk_,
+		FSM_ready_in,
 		piso_actual, 
 		solicitud_ps,
 		solicitud_p1,
 		solicitud_p2,
 		solicitud_p3,
 		solicitud_p4,
-		accion
+		accion,
+		clear_solicitud_ps,
+		clear_solicitud_p1,
+		clear_solicitud_p2,
+		clear_solicitud_p3,
+		clear_solicitud_p4
 		);
 		
 		input [2:0] piso_actual;
 		input [1:0] solicitud_ps, solicitud_p1, solicitud_p2, solicitud_p3, solicitud_p4;
+		input _clk_, FSM_ready_in;
 		output reg [1:0] accion;
 		
-		always @(accion)
+		always @(posedge _clk_)
 			begin
 				//acciones para el sotano
 				if (piso_actual == 3'b000)

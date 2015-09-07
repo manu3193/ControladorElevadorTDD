@@ -15,6 +15,11 @@ module MaquinaEstados(
 	restart_timer, //reinicia el timer 
 	start_timer, //inicia el timer
 	
+	//Se;al que habilitan el verificador de movimiento
+	habilita_verificador,
+	inicia_Registro_Solicitudes,
+	
+	
 	//A continuacin los leds que se estrn activando y desactivando
 	subiendo_LED,
 	bajando_LED,
@@ -23,7 +28,12 @@ module MaquinaEstados(
 	puerta_abierta_LED,
 	puerta_cerrada_LED,
 	sensor_puerta_LED,
-	sensor_sobrepeso_LED
+	sensor_sobrepeso_LED,
+	
+	//Se;al de finalizaci'on
+	ready
+	
+
 	 	 
    );
 	
@@ -31,7 +41,7 @@ module MaquinaEstados(
 	input wire [1:0] accion;
 	input sensor_puerta, sensor_sobrepeso, t_expired;
 	
-	output reg restart_timer, start_timer;
+	output reg restart_timer, start_timer, ready, habilita_verificador, inicia_Registro_Solicitudes;
 	output reg subiendo_LED,
 			 bajando_LED,
 		    freno_act_LED,
@@ -42,46 +52,50 @@ module MaquinaEstados(
 			 sensor_sobrepeso_LED;
 			 
 	 output [1:0] state;
-	 reg[1:0] state, nextState;
+	 reg[3:0] state, nextState;
 	 
-	 parameter reposo = 0;
-	 parameter movimiento = 1;
-	 parameter detener = 2;
-	 parameter abre_puerta = 3;
-	 parameter inicia_conteo = 4;
-	 parameter revisa_seguridad = 5;
-	 parameter dispara_alerta = 6;
-	 parameter reinicia_conteo = 7;
-	 parameter cierra_puerta = 8;
+	 parameter inicio=4'd0;
+	 parameter reposo = 4'd1;
+	 parameter movimiento = 4'd2;
+	 parameter detener = 4'd3;
+	 parameter abre_puerta = 4'd4;
+	 parameter inicia_conteo = 4'd5;
+	 parameter revisa_seguridad = 4'd6;
+	 parameter dispara_alerta = 4'd7;
+	 parameter reinicia_conteo = 4'd8;
+	 parameter cierra_puerta = 4'd9;
 	 
 	 //Asignacin sincrona del siguiente estado
-	 always @(posedge clk or negedge reset)
-		if (!reset)
-			state <= reposo;
+	 always @(posedge clk or posedge reset)
+		if (reset)
+			state <= inicio;
 		else 
 			state <= nextState;
-	 
-	 always @(state or accion)
 	
-	 begin
+	 
+	 
+	 always @(state or accion) begin
+	 nextState=4'bxxxx;
 		case (state)
-		
+			inicio:
+				begin
+					habilita_verificador=1'b1;
+					inicia_Registro_Solicitudes=1'b1;
+					nextState = reposo;
+				end
 			reposo:
 				begin
-				freno_act_LED = 1'b1;
-				puerta_abierta_LED = 1'b0;
-				puerta_cerrada_LED = 1'b1;
-				motor_act_LED = 1'b0;
-				if (accion[1:0] == 2'b00)
-					begin
-					nextState = reposo;
+					freno_act_LED = 1'b1;
+					puerta_abierta_LED = 1'b0;
+					puerta_cerrada_LED = 1'b1;
+					motor_act_LED = 1'b0;
+					if (accion == 2'b00) begin
+						nextState = reposo;
 					end
-				else if (accion[1:0] == 2'b1x)
-					begin
+					else if (accion == 2'b10 || accion == 2'b11) begin
 					nextState = movimiento;
 					end
-				else if (accion[1:0] == 2'b01)
-					begin
+					else if (accion == 2'b01) begin
 					nextState = abre_puerta;
 					end
 				end
@@ -90,22 +104,19 @@ module MaquinaEstados(
 				begin
 				freno_act_LED = 1'b0;
 				motor_act_LED = 1'b1;
-				
-				if (accion[1:0] == 2'b1x)
-					begin
-					if (accion[1:0] == 2'b10)
-						begin
-						subiendo_LED = 1'b1;
-						bajando_LED = 1'b0;
-						end 
-					if (accion[1:0] == 2'b11)
-						begin
-						subiendo_LED = 1'b0;
-						bajando_LED = 1'b1;
-						end 
+				if (accion == 2'b10) begin
+					subiendo_LED = 1'b1;
+					bajando_LED = 1'b0;
+					//Agregar se activa el 7seg subiendo
 					nextState = movimiento;
-					end
-				else if (accion[1:0] == 2'b01)
+				end 
+				else if (accion == 2'b11) begin
+					subiendo_LED = 1'b0;
+					bajando_LED = 1'b1;
+					//Agregar se activa el 7 seg bajando
+					nextState = movimiento;
+				end 
+				else if (accion == 2'b01)
 					begin
 					nextState = detener;
 					end
@@ -122,11 +133,12 @@ module MaquinaEstados(
 				begin
 				puerta_abierta_LED = 1'b1;
 				puerta_cerrada_LED = 1'b0;
-				if (accion [1:0] == 2'b1x)
+				ready= 1'b1;
+				if (accion == 2'b10 || accion == 2'b11)
 					begin 
 					nextState = inicia_conteo;
 					end
-				else if (accion[1:0] == 2'b00)
+				else if (accion == 2'b00)
 					begin 
 					nextState = reposo;
 					end
